@@ -101,7 +101,7 @@ diff -Nur --exclude *~ ipmasqadm-0.4.2/modules/portfw.c ipmasqadm-0.4.2.new/modu
 +#ifdef NO_DLOPEN
 +int portfw_main(int argc, const char *argv[])
 +#else
-+int modmasq_main(int argc, const char *argv[])
++int masqmod_main(int argc, const char *argv[])
 +#endif
  {
  	int c;
