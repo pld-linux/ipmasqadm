@@ -9,6 +9,7 @@ Group(de):	Netzwerkwesen/Administration
 Group(pl):	Sieciowe/Administacyjne
 Source0:	http://juanjox.kernelnotes.org/%{name}-%{version}.tar.gz
 Patch0:		%{name}-%{version}.make.diff
+Patch1:		%{name}-no_dlopen.patch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -29,24 +30,33 @@ Group:		Applications/System
 %prep
 %setup -q
 %patch -p1
+%patch1 -p1
 
 %build
-
 %if %{?BOOT:1}%{!?BOOT:0}
-%{__make} \
+%{__make} SUBDIRS="lib modules" \
 	OPT="-Os" \
-	XCFLAGS="-I%{_libdir}/bootdisk%{_includedir}" \
+	XCFLAGS="-I%{_libdir}/bootdisk%{_includedir} -DNO_DLOPEN" \
 	KSRC=%{_prefix}/src/linux \
 	LDFLAGS="-nostdlib -s -L../lib" \
-	LDLIBS='$(SH_LDLIBS) -lgcc' \
-	SH_LDLIBS="-lip_masq \
-		%{_libdir}/bootdisk%{_libdir}/libdl.a \
+	LDLIBS="-lip_masq \
 		%{_libdir}/bootdisk%{_libdir}/crt0.o \
-		%{_libdir}/bootdisk%{_libdir}/libc.a"
+		%{_libdir}/bootdisk%{_libdir}/libc.a -lgcc" \
+	SH_LDFLAGS="-nostdlib -s -L../lib" \
+	SH_LDLIBS="" 
+
+%{__make} SUBDIRS="ipmasqadm" \
+	OPT="-Os" \
+	XCFLAGS="-I%{_libdir}/bootdisk%{_includedir} -DNO_DLOPEN" \
+	KSRC=%{_prefix}/src/linux \
+	LDFLAGS="-nostdlib -s -L../lib" \
+	LDLIBS="../modules/portfw_sh.o ../modules/autofw_sh.o ../modules/user_sh.o ../modules/mfw_sh.o -lip_masq \
+		%{_libdir}/bootdisk%{_libdir}/crt0.o \
+		%{_libdir}/bootdisk%{_libdir}/libc.a -lgcc"
+
 mv -f %{name}/%{name} %{name}-BOOT
 %{__make} clean
 %endif
-
 
 %{__make} OPT="%{rpmcflags}" KSRC=%{_prefix}/src/linux
 
