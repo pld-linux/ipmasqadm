@@ -7,8 +7,6 @@ Version:	0.4.2
 Release:	4
 License:	distributable
 Group:		Networking/Admin
-Group(de):	Netzwerkwesen/Administration
-Group(pl):	Sieciowe/Administracyjne
 Source0:	http://juanjox.kernelnotes.org/%{name}-%{version}.tar.gz
 Patch0:		%{name}-%{version}.make.diff
 Patch1:		%{name}-no_dlopen.patch
@@ -36,8 +34,6 @@ automatycznego forwardowania w kernelach 2.2.
 Summary:	ipmasqadm for bootdisk
 Summary(pl):	ipmasqadm na bootkietkê
 Group:		Applications/System
-Group(de):	Applikationen/System
-Group(pl):	Aplikacje/System
 
 %description embed
 ipmasqadm for bootdisk.
