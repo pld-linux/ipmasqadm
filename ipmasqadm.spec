@@ -23,13 +23,13 @@ automatycznego forwardowania w kernelach 2.2.
 %patch -p1
 
 %build
-make OPT="$RPM_OPT_FLAGS" KSRC=%{_prefix}/src/linux
+%{__make} OPT="$RPM_OPT_FLAGS" KSRC=%{_prefix}/src/linux
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sbindir},%{_libdir}/ipmasqadm} 
 
-make install DESTDIR=$RPM_BUILD_ROOT \
+%{__make} install DESTDIR=$RPM_BUILD_ROOT \
 	MANDIR=$RPM_BUILD_ROOT/%{_mandir}
 
 strip $RPM_BUILD_ROOT%{_sbindir}/ipmasqadm
