@@ -1,8 +1,10 @@
+# conditional build:
+# _without_embed - don't build uClibc version
 Summary:	Ipmasqadm utility
 Summary(pl):	Narzêdzie ipmasqadm
 Name:		ipmasqadm
 Version:	0.4.2
-Release:	3
+Release:	4
 License:	distributable
 Group:		Networking/Admin
 Group(de):	Netzwerkwesen/Administration
@@ -11,8 +13,16 @@ Source0:	http://juanjox.kernelnotes.org/%{name}-%{version}.tar.gz
 Patch0:		%{name}-%{version}.make.diff
 Patch1:		%{name}-no_dlopen.patch
 BuildRequires:	kernel-headers < 2.3.0
+%if %{!?_without_embed:1}%{?_without_embed:0}
+BuildRequires:	uClibc-devel
+BuildRequires:	uClibc-static
+%endif
 Conflicts:	kernel >= 2.3.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define embed_path	/usr/lib/embed
+%define embed_cc	%{_arch}-uclibc-cc
+%define embed_cflags	%{rpmcflags} -Os
 
 %description
 This tool allows ipmasq addtional setup, it is needed if you want to
@@ -22,13 +32,13 @@ activate port forwarding or auto forwarding in 2.2 kernels.
 To narzêdzie pozwala na aktywowanie forwardowania portów lub
 automatycznego forwardowania w kernelach 2.2.
 
-%package BOOT
+%package embed
 Summary:	ipmasqadm for bootdisk
 Group:		Applications/System
 Group(de):	Applikationen/System
 Group(pl):	Aplikacje/System
 
-%description BOOT
+%description embed
 ipmasqadm for bootdisk.
 
 %prep
@@ -37,28 +47,25 @@ ipmasqadm for bootdisk.
 %patch1 -p1
 
 %build
-%if %{?BOOT:1}%{!?BOOT:0}
+%if %{!?_without_embed:1}%{?_without_embed:0}
 %{__make} SUBDIRS="lib modules" \
-	OPT="-Os" \
-	XCFLAGS="-I%{_libdir}/bootdisk%{_includedir} -DNO_DLOPEN" \
+	OPT="%{embed_cflags}" \
+	XCFLAGS="-DNO_DLOPEN" \
+	CC=%{embed_cc} \
 	KSRC=%{_kernelsrcdir} \
-	LDFLAGS="-nostdlib -L../lib" \
-	LDLIBS="-lip_masq \
-		%{_libdir}/bootdisk%{_libdir}/crt0.o \
-		%{_libdir}/bootdisk%{_libdir}/libc.a -lgcc" \
-	SH_LDFLAGS="-nostdlib -L../lib" \
-	SH_LDLIBS="" 
+	LDFLAGS="-L../lib" \
+	SH_LDFLAGS="-L../lib"
+mv -f %{name}/%{name} %{name}-embed-shared
 
-%{__make} SUBDIRS="ipmasqadm" \
-	OPT="-Os" \
-	XCFLAGS="-I%{_libdir}/bootdisk%{_includedir} -DNO_DLOPEN" \
+%{__make} SUBDIRS="lib modules" \
+	OPT="%{embed_cflags}" \
+	XCFLAGS="-DNO_DLOPEN" \
+	CC=%{embed_cc} \
 	KSRC=%{_kernelsrcdir} \
-	LDFLAGS="-nostdlib -L../lib" \
-	LDLIBS="../modules/portfw_sh.o ../modules/autofw_sh.o ../modules/user_sh.o ../modules/mfw_sh.o -lip_masq \
-		%{_libdir}/bootdisk%{_libdir}/crt0.o \
-		%{_libdir}/bootdisk%{_libdir}/libc.a -lgcc"
+	LDFLAGS="-static -L../lib" \
+	SH_LDFLAGS="-static -L../lib"
+mv -f %{name}/%{name} %{name}-embed-static
 
-mv -f %{name}/%{name} %{name}-BOOT
 %{__make} clean
 %endif
 
@@ -68,11 +75,10 @@ mv -f %{name}/%{name} %{name}-BOOT
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sbindir},%{_libdir}/ipmasqadm} 
 
-%if %{?BOOT:1}%{!?BOOT:0}
-install -d $RPM_BUILD_ROOT%{_libdir}/bootdisk/sbin
-for i in *-BOOT; do 
-	install $i $RPM_BUILD_ROOT%{_libdir}/bootdisk/sbin/`basename $i -BOOT`
-done
+%if %{!?_without_embed:1}%{?_without_embed:0}
+install -d $RPM_BUILD_ROOT%{embed_path}/{shared,static}
+install %{name}-embed-shared $RPM_BUILD_ROOT%{embed_path}/shared/%{name}
+install %{name}-embed-static $RPM_BUILD_ROOT%{embed_path}/static/%{name}
 %endif
 
 %{__make} install \
@@ -92,8 +98,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/ipmasqadm/*.so
 %{_mandir}/man8/*
 
-%if %{?BOOT:1}%{!?BOOT:0}
-%files BOOT
+%if %{!?_without_embed:1}%{?_without_embed:0}
+%files embed
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/bootdisk/sbin/*
+%attr(755,root,root) %{embed_path}/*/*
 %endif
