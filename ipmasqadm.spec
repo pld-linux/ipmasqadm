@@ -2,11 +2,10 @@ Summary:	Ipmasqadm utility
 Summary(pl):	Narzêdzie ipmasqadm
 Name:		ipmasqadm
 Version:	0.4.2
-Release:	1d
-Vendor:		Juan Jose Ciarlante <irriga@impsat1.com.ar>
+Release:	2
 Copyright:	distributable
 Group:		Networking/Admin
-Group(pl):	Sieæ/Administracja
+Group(pl):	Sieciowe/Administracyjne
 Source:		http://juanjox.home.ml.org/ipmasqadm-%{version}.tar.gz
 Patch:		%{name}-%{version}.make.diff
 BuildRoot:	/tmp/%{name}-%{version}-root
@@ -28,19 +27,19 @@ make OPT="$RPM_OPT_FLAGS" KSRC=/usr/src/linux
 
 %install
 rm -rf $RPM_BUILD_ROOT
-
 install -d $RPM_BUILD_ROOT/usr/{sbin,lib/ipmasqadm} 
+
 make DESTDIR=$RPM_BUILD_ROOT install
 
 strip		$RPM_BUILD_ROOT%{_sbindir}/ipmasqadm
-bzip2 -9	$RPM_BUILD_ROOT%{_mandir}/man8/* doc/* ChangeLog
+gzip -9nf	$RPM_BUILD_ROOT%{_mandir}/man8/* doc/* ChangeLog
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc doc/* ChangeLog.bz2
+%doc doc/* ChangeLog.gz
 
 %attr(700,root,root) %{_sbindir}/ipmasqadm
 
@@ -50,6 +49,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/*
 
 %changelog
+* Mon May 24 1999 Micha³ Kuratczyk <kura@pld.org.pl>
+  [0.4.2-2]
+- fixed Group(pl)
+- gzipping %doc instead bzipping
+
 * Sat Jan 23 1999 Arkadiusz Mi¶kiewicz <misiek@misiek.eu.org>
   [0.4.2-1d]
 - new upstream release for newest 2.2 kernels
