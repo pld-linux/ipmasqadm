@@ -8,6 +8,7 @@ Release:	5
 License:	distributable
 Group:		Networking/Admin
 Source0:	http://juanjox.kernelnotes.org/%{name}-%{version}.tar.gz
+# Source0-md5:	42997e1b118d7e5fbf1a9cd401a12513
 Patch0:		%{name}-%{version}.make.diff
 Patch1:		%{name}-no_dlopen.patch
 BuildRequires:	kernel-headers < 2.3.0
