@@ -24,7 +24,7 @@ automatycznego forwardowania w kernelach 2.2.
 %patch -p1
 
 %build
-%{__make} OPT="%{?debug:-O0 -g}%{!?debug:$RPM_OPT_FLAGS}" KSRC=%{_prefix}/src/linux
+%{__make} OPT="%{rpmcflags}" KSRC=%{_prefix}/src/linux
 
 %install
 rm -rf $RPM_BUILD_ROOT
