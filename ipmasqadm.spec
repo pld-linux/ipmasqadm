@@ -2,7 +2,7 @@ Summary:	Ipmasqadm utility
 Summary(pl):	Narzêdzie ipmasqadm
 Name:		ipmasqadm
 Version:	0.4.2
-Release:	2
+Release:	3
 License:	Distributable
 Group:		Networking/Admin
 Group(de):	Netzwerkwesen/Administration
