@@ -3,10 +3,10 @@ Summary(pl):	Narzêdzie ipmasqadm
 Name:		ipmasqadm
 Version:	0.4.2
 Release:	2
-Copyright:	distributable
+License:	Distributable
 Group:		Networking/Admin
 Group(de):	Netzwerkwesen/Administration
-Group(pl):	Sieciowe/Administacyjne
+Group(pl):	Sieciowe/Administracyjne
 Source0:	http://juanjox.kernelnotes.org/%{name}-%{version}.tar.gz
 Patch0:		%{name}-%{version}.make.diff
 Patch1:		%{name}-no_dlopen.patch
@@ -20,12 +20,14 @@ activate port forwarding or auto forwarding in 2.2 kernels.
 To narzêdzie pozwala na aktywowanie forwardowania portów lub
 automatycznego forwardowania w kernelach 2.2.
 
-%if %{?BOOT:1}%{!?BOOT:0}
 %package BOOT
-Summary:	%{name} for bootdisk
+Summary:	ipmasqadm for bootdisk
 Group:		Applications/System
+Group(de):	Applikationen/System
+Group(pl):	Aplikacje/System
+
 %description BOOT
-%endif
+ipmasqadm for bootdisk.
 
 %prep
 %setup -q
@@ -38,18 +40,18 @@ Group:		Applications/System
 	OPT="-Os" \
 	XCFLAGS="-I%{_libdir}/bootdisk%{_includedir} -DNO_DLOPEN" \
 	KSRC=%{_prefix}/src/linux \
-	LDFLAGS="-nostdlib -s -L../lib" \
+	LDFLAGS="-nostdlib -L../lib" \
 	LDLIBS="-lip_masq \
 		%{_libdir}/bootdisk%{_libdir}/crt0.o \
 		%{_libdir}/bootdisk%{_libdir}/libc.a -lgcc" \
-	SH_LDFLAGS="-nostdlib -s -L../lib" \
+	SH_LDFLAGS="-nostdlib -L../lib" \
 	SH_LDLIBS="" 
 
 %{__make} SUBDIRS="ipmasqadm" \
 	OPT="-Os" \
 	XCFLAGS="-I%{_libdir}/bootdisk%{_includedir} -DNO_DLOPEN" \
 	KSRC=%{_prefix}/src/linux \
-	LDFLAGS="-nostdlib -s -L../lib" \
+	LDFLAGS="-nostdlib -L../lib" \
 	LDLIBS="../modules/portfw_sh.o ../modules/autofw_sh.o ../modules/user_sh.o ../modules/mfw_sh.o -lip_masq \
 		%{_libdir}/bootdisk%{_libdir}/crt0.o \
 		%{_libdir}/bootdisk%{_libdir}/libc.a -lgcc"
@@ -62,16 +64,14 @@ mv -f %{name}/%{name} %{name}-BOOT
 
 %install
 rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT{%{_sbindir},%{_libdir}/ipmasqadm} 
 
 %if %{?BOOT:1}%{!?BOOT:0}
-install -d $RPM_BUILD_ROOT/usr/lib/bootdisk/sbin
+install -d $RPM_BUILD_ROOT%{_libdir}/bootdisk/sbin
 for i in *-BOOT; do 
-  install -s $i $RPM_BUILD_ROOT/usr/lib/bootdisk/sbin/`basename $i -BOOT`
+	install $i $RPM_BUILD_ROOT%{_libdir}/bootdisk/sbin/`basename $i -BOOT`
 done
 %endif
-
-
-install -d $RPM_BUILD_ROOT{%{_sbindir},%{_libdir}/ipmasqadm} 
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
@@ -93,5 +93,5 @@ rm -rf $RPM_BUILD_ROOT
 %if %{?BOOT:1}%{!?BOOT:0}
 %files BOOT
 %defattr(644,root,root,755)
-%attr(755,root,root) /usr/lib/bootdisk/sbin/*
+%attr(755,root,root) %{_libdir}/bootdisk/sbin/*
 %endif
