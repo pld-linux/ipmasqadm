@@ -6,24 +6,24 @@ Release:	2
 Copyright:	distributable
 Group:		Networking/Admin
 Group(pl):	Sieciowe/Administracyjne
-Source:		http://juanjox.home.ml.org/ipmasqadm-%{version}.tar.gz
-Patch:		%{name}-%{version}.make.diff
+Source0:	http://juanjox.home.ml.org/%{name}-%{version}.tar.gz
+Patch0:		%{name}-%{version}.make.diff
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-This tool allows ipmasq addtional setup, it is needed if you 
-want to activate port forwarding or auto forwarding in 2.2 kernels.
+This tool allows ipmasq addtional setup, it is needed if you want to
+activate port forwarding or auto forwarding in 2.2 kernels.
 
 %description -l pl
-To narzêdzie pozwala na aktywowanie forwardowania portów
-lub automatycznego forwardowania w kernelach 2.2.
+To narzêdzie pozwala na aktywowanie forwardowania portów lub
+automatycznego forwardowania w kernelach 2.2.
 
 %prep
 %setup -q
 %patch -p1
 
 %build
-make OPT="$RPM_OPT_FLAGS" KSRC=/usr/src/linux 
+make OPT="$RPM_OPT_FLAGS" KSRC=%{_prefix}/src/linux
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -32,8 +32,9 @@ install -d $RPM_BUILD_ROOT{%{_sbindir},%{_libdir}/ipmasqadm}
 make install DESTDIR=$RPM_BUILD_ROOT \
 	MANDIR=$RPM_BUILD_ROOT/%{_mandir}
 
-strip		$RPM_BUILD_ROOT%{_sbindir}/ipmasqadm
-gzip -9nf	$RPM_BUILD_ROOT%{_mandir}/man8/* doc/* ChangeLog
+strip $RPM_BUILD_ROOT%{_sbindir}/ipmasqadm
+
+gzip -9nf $RPM_BUILD_ROOT%{_mandir}/man8/* doc/* ChangeLog
 
 %clean
 rm -rf $RPM_BUILD_ROOT
