@@ -5,7 +5,8 @@ Version:	0.4.2
 Release:	2
 Copyright:	distributable
 Group:		Networking/Admin
-Group(pl):	Sieciowe/Administracyjne
+Group(de):	Netzwerkwesen/Administration
+Group(pl):	Sieciowe/Administacyjne
 Source0:	http://juanjox.kernelnotes.org/%{name}-%{version}.tar.gz
 Patch0:		%{name}-%{version}.make.diff
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -23,18 +24,17 @@ automatycznego forwardowania w kernelach 2.2.
 %patch -p1
 
 %build
-%{__make} OPT="$RPM_OPT_FLAGS" KSRC=%{_prefix}/src/linux
+%{__make} OPT="%{!?debug:$RPM_OPT_FLAGS}%{?debug:-O -g}" KSRC=%{_prefix}/src/linux
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sbindir},%{_libdir}/ipmasqadm} 
 
-%{__make} install DESTDIR=$RPM_BUILD_ROOT \
-	MANDIR=$RPM_BUILD_ROOT/%{_mandir}
+%{__make} install \
+	DESTDIR=$RPM_BUILD_ROOT \
+	MANDIR=$RPM_BUILD_ROOT%{_mandir}
 
-strip $RPM_BUILD_ROOT%{_sbindir}/ipmasqadm
-
-gzip -9nf $RPM_BUILD_ROOT%{_mandir}/man8/* doc/* ChangeLog
+gzip -9nf doc/* ChangeLog
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -42,10 +42,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc doc/* ChangeLog.gz
-
-%attr(700,root,root) %{_sbindir}/ipmasqadm
-
-%attr(700,root,root) %dir %{_libdir}/ipmasqadm
+%attr(755,root,root) %{_sbindir}/ipmasqadm
+%dir %{_libdir}/ipmasqadm
 %attr(755,root,root) %{_libdir}/ipmasqadm/*.so
-
 %{_mandir}/man8/*
