@@ -10,6 +10,8 @@ Group(pl):	Sieciowe/Administracyjne
 Source0:	http://juanjox.kernelnotes.org/%{name}-%{version}.tar.gz
 Patch0:		%{name}-%{version}.make.diff
 Patch1:		%{name}-no_dlopen.patch
+BuildRequires:	kernel-headers < 2.3.0
+Conflicts:	kernel >= 2.3.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -39,7 +41,7 @@ ipmasqadm for bootdisk.
 %{__make} SUBDIRS="lib modules" \
 	OPT="-Os" \
 	XCFLAGS="-I%{_libdir}/bootdisk%{_includedir} -DNO_DLOPEN" \
-	KSRC=%{_prefix}/src/linux \
+	KSRC=%{_kernelsrcdir} \
 	LDFLAGS="-nostdlib -L../lib" \
 	LDLIBS="-lip_masq \
 		%{_libdir}/bootdisk%{_libdir}/crt0.o \
@@ -50,7 +52,7 @@ ipmasqadm for bootdisk.
 %{__make} SUBDIRS="ipmasqadm" \
 	OPT="-Os" \
 	XCFLAGS="-I%{_libdir}/bootdisk%{_includedir} -DNO_DLOPEN" \
-	KSRC=%{_prefix}/src/linux \
+	KSRC=%{_kernelsrcdir} \
 	LDFLAGS="-nostdlib -L../lib" \
 	LDLIBS="../modules/portfw_sh.o ../modules/autofw_sh.o ../modules/user_sh.o ../modules/mfw_sh.o -lip_masq \
 		%{_libdir}/bootdisk%{_libdir}/crt0.o \
@@ -60,7 +62,7 @@ mv -f %{name}/%{name} %{name}-BOOT
 %{__make} clean
 %endif
 
-%{__make} OPT="%{rpmcflags}" KSRC=%{_prefix}/src/linux
+%{__make} OPT="%{rpmcflags}" KSRC=%{_kernelsrcdir}
 
 %install
 rm -rf $RPM_BUILD_ROOT
