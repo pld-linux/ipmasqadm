@@ -1,5 +1,7 @@
 Summary:	Ipmasqadm utility
+Summary(es):	Utilitario ipmasqadm
 Summary(pl):	Narzêdzie ipmasqadm
+Summary(pt_BR):	Utilitário ipmasqadm
 Name:		ipmasqadm
 Version:	0.4.2
 Release:	5
@@ -16,9 +18,18 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 This tool allows ipmasq addtional setup, it is needed if you want to
 activate port forwarding or auto forwarding in 2.2 kernels.
 
+%description -l es
+Esta herramienta permite la configuración adicional de ipmasq, y puede
+usarse en caso de que se desee activar una salida de reenvío y reenvío
+automático.
+
 %description -l pl
 To narzêdzie pozwala na aktywowanie forwardowania portów lub
 automatycznego forwardowania w kernelach 2.2.
+
+%description -l pt_BR
+Essa ferramenta permite configuração adicional do ipmasq, e pode ser
+usada caso você deseje ativar port forwarding e auto forwarding.
 
 %prep
 %setup -q
@@ -26,7 +37,6 @@ automatycznego forwardowania w kernelach 2.2.
 %patch1 -p1
 
 %build
-
 %{__make} OPT="%{rpmcflags}" KSRC=%{_kernelsrcdir}
 
 %install
@@ -37,14 +47,12 @@ install -d $RPM_BUILD_ROOT{%{_sbindir},%{_libdir}/ipmasqadm}
 	DESTDIR=$RPM_BUILD_ROOT \
 	MANDIR=$RPM_BUILD_ROOT%{_mandir}
 
-gzip -9nf doc/* ChangeLog
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc doc/* ChangeLog.gz
+%doc doc/* ChangeLog
 %attr(755,root,root) %{_sbindir}/ipmasqadm
 %dir %{_libdir}/ipmasqadm
 %attr(755,root,root) %{_libdir}/ipmasqadm/*.so
