@@ -5,7 +5,7 @@ Version:	0.4.2
 Release:	2
 Copyright:	distributable
 Group:		Networking/Admin
-Group(pl):	Sieciowe/Administracyjne
+Group(pl):	Sieciowe/Administracja
 Source:		http://juanjox.home.ml.org/ipmasqadm-%{version}.tar.gz
 Patch:		%{name}-%{version}.make.diff
 BuildRoot:	/tmp/%{name}-%{version}-root
@@ -27,9 +27,10 @@ make OPT="$RPM_OPT_FLAGS" KSRC=/usr/src/linux
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/usr/{sbin,lib/ipmasqadm} 
+install -d $RPM_BUILD_ROOT{%{_sbindir},%{_libdir}/ipmasqadm} 
 
-make DESTDIR=$RPM_BUILD_ROOT install
+make install DESTDIR=$RPM_BUILD_ROOT \
+	MANDIR=$RPM_BUILD_ROOT/%{_mandir}
 
 strip		$RPM_BUILD_ROOT%{_sbindir}/ipmasqadm
 gzip -9nf	$RPM_BUILD_ROOT%{_mandir}/man8/* doc/* ChangeLog
