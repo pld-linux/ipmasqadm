@@ -44,8 +44,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %attr(700,root,root) /usr/sbin/ipmasqadm
 
-%attr(700,root,root) %dir /usr/lib/ipmasqadm
-%attr(755,root,root) /usr/lib/ipmasqadm/*.so
+%attr(700,root,root) %dir %{_libdir}/ipmasqadm
+%attr(755,root,root) %{_libdir}/ipmasqadm/*.so
 
 %{_mandir}/man8/*
 
