@@ -47,13 +47,3 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/ipmasqadm/*.so
 
 %{_mandir}/man8/*
-
-%changelog
-* Mon May 24 1999 Micha³ Kuratczyk <kura@pld.org.pl>
-  [0.4.2-2]
-- fixed Group(pl)
-- gzipping %doc instead bzipping
-
-* Sat Jan 23 1999 Arkadiusz Mi¶kiewicz <misiek@misiek.eu.org>
-  [0.4.2-1d]
-- new upstream release for newest 2.2 kernels
