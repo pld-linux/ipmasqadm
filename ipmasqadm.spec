@@ -7,10 +7,11 @@ Version:	0.4.2
 Release:	5
 License:	distributable
 Group:		Networking/Admin
-Source0:	http://juanjox.kernelnotes.org/%{name}-%{version}.tar.gz
-# Source0-md5:	42997e1b118d7e5fbf1a9cd401a12513
+Source0:	http://www.e-infomax.com/ipmasq/juanjox/%{name}-%{version}.tar.gz
+# Source0-md5:	85ea429e3617dcc99133d310476ff29a
 Patch0:		%{name}-%{version}.make.diff
 Patch1:		%{name}-no_dlopen.patch
+URL:		http://www.e-infomax.com/ipmasq/juanjox
 BuildRequires:	kernel-headers < 2.3.0
 Conflicts:	kernel >= 2.3.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
