@@ -33,7 +33,7 @@ install -d $RPM_BUILD_ROOT/usr/{sbin,lib/ipmasqadm}
 make DESTDIR=$RPM_BUILD_ROOT install
 
 strip		$RPM_BUILD_ROOT/usr/sbin/ipmasqadm
-bzip2 -9	$RPM_BUILD_ROOT/usr/man/man8/* doc/* ChangeLog
+bzip2 -9	$RPM_BUILD_ROOT%{_mandir}/man8/* doc/* ChangeLog
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -47,7 +47,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(700,root,root) %dir /usr/lib/ipmasqadm
 %attr(755,root,root) /usr/lib/ipmasqadm/*.so
 
-%attr(644,root, man) /usr/man/man8/*
+%attr(644,root, man) %{_mandir}/man8/*
 
 %changelog
 * Sat Jan 23 1999 Arkadiusz Mi¶kiewicz <misiek@misiek.eu.org>
