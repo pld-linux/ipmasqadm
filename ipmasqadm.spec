@@ -34,12 +34,16 @@ automatycznego forwardowania w kernelach 2.2.
 
 %package embed
 Summary:	ipmasqadm for bootdisk
+Summary(pl):	ipmasqadm na bootkietkê
 Group:		Applications/System
 Group(de):	Applikationen/System
 Group(pl):	Aplikacje/System
 
 %description embed
 ipmasqadm for bootdisk.
+
+%description embed -l pl
+ipmasqadm na bootkietkê.
 
 %prep
 %setup -q
@@ -73,7 +77,7 @@ mv -f %{name}/%{name} %{name}-embed-static
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sbindir},%{_libdir}/ipmasqadm} 
+install -d $RPM_BUILD_ROOT{%{_sbindir},%{_libdir}/ipmasqadm}
 
 %if %{!?_without_embed:1}%{?_without_embed:0}
 install -d $RPM_BUILD_ROOT%{embed_path}/{shared,static}
