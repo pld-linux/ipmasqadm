@@ -6,7 +6,7 @@ Release:	2
 Copyright:	distributable
 Group:		Networking/Admin
 Group(pl):	Sieciowe/Administracyjne
-Source0:	http://juanjox.home.ml.org/%{name}-%{version}.tar.gz
+Source0:	http://juanjox.kernelnotes.org/%{name}-%{version}.tar.gz
 Patch0:		%{name}-%{version}.make.diff
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
