@@ -9,7 +9,7 @@ Group:		Networking/Admin
 Group(pl):	Sieæ/Administracja
 Source:		http://juanjox.home.ml.org/ipmasqadm-%{version}.tar.gz
 Patch:		%{name}-%{version}.make.diff
-BuildRoot:	/var/tmp/buildroot-%{name}-%{version}
+BuildRoot:	/tmp/%{name}-%{version}-root
 
 %description
 This tool allows ipmasq addtional setup, it is needed if you 
