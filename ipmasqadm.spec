@@ -47,7 +47,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(700,root,root) %dir /usr/lib/ipmasqadm
 %attr(755,root,root) /usr/lib/ipmasqadm/*.so
 
-%attr(644,root, man) %{_mandir}/man8/*
+%{_mandir}/man8/*
 
 %changelog
 * Sat Jan 23 1999 Arkadiusz Mi¶kiewicz <misiek@misiek.eu.org>
