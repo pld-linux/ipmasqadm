@@ -5,7 +5,7 @@ Version:	0.4.2
 Release:	2
 Copyright:	distributable
 Group:		Networking/Admin
-Group(pl):	Sieciowe/Administracja
+Group(pl):	Sieciowe/Administracyjne
 Source:		http://juanjox.home.ml.org/ipmasqadm-%{version}.tar.gz
 Patch:		%{name}-%{version}.make.diff
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
