@@ -1,0 +1,184 @@
+diff -Nur --exclude *~ ipmasqadm-0.4.2/ipmasqadm/ipmasqadm.c ipmasqadm-0.4.2.new/ipmasqadm/ipmasqadm.c
+--- ipmasqadm-0.4.2/ipmasqadm/ipmasqadm.c	Wed Jun 17 21:32:01 1998
++++ ipmasqadm-0.4.2.new/ipmasqadm/ipmasqadm.c	Sat Jun 16 14:16:59 2001
+@@ -44,6 +44,7 @@
+ 
+ 	modname = argv[1];
+ 
++#ifndef NO_DLOPEN
+ 	mod_filename=malloc(strlen(LIBDIR)+strlen(modname)+1+3+1);
+         if (!mod_filename) {
+         	perror("malloc()");
+@@ -76,4 +77,15 @@
+ 	 *	Here we go ...
+ 	 */
+ 	return mod_main(argc, argv);
++#else
++	--argc;
++	++argv;
++
++	if (strcmp(modname,"mfw") == 0)         return mfw_main(argc, argv);
++	else if (strcmp(modname,"portfw") == 0) return portfw_main(argc, argv);
++	else if (strcmp(modname,"autofw") == 0) return autofw_main(argc, argv);
++	else if (strcmp(modname,"user") == 0)   return user_main(argc, argv);
++	else { fprintf(stderr, "No such module %s\n", modname); return 1; }
++#endif
++	
+ }
+diff -Nur --exclude *~ ipmasqadm-0.4.2/modules/autofw.c ipmasqadm-0.4.2.new/modules/autofw.c
+--- ipmasqadm-0.4.2/modules/autofw.c	Sat Aug 29 02:07:11 1998
++++ ipmasqadm-0.4.2.new/modules/autofw.c	Sat Jun 16 14:20:30 2001
+@@ -34,7 +34,11 @@
+ #include <linux/ip_masq.h>
+ 
+ 
+-int masqmod_main(int argc, const char * argv [])
++#ifdef NO_DLOPEN
++int autofw_main(int argc, const char *argv[])
++#else
++int masqmod_main(int argc, const char *argv[])
++#endif
+ {
+ 	struct ip_masq_ctl mctl;
+ #define af mctl.u.autofw_user
+diff -Nur --exclude *~ ipmasqadm-0.4.2/modules/mfw.c ipmasqadm-0.4.2.new/modules/mfw.c
+--- ipmasqadm-0.4.2/modules/mfw.c	Mon Dec  7 18:52:44 1998
++++ ipmasqadm-0.4.2.new/modules/mfw.c	Sat Jun 16 14:52:44 2001
+@@ -52,7 +52,11 @@
+ 
+ static const char *modname;
+ 
++#ifdef NO_DLOPEN
++int mfw_main(int argc, const char *argv[])
++#else
+ int masqmod_main(int argc, const char *argv[])
++#endif
+ {
+ 	int c;
+ 	int command = IP_MASQ_CMD_NONE;
+@@ -182,7 +186,7 @@
+ 	return(do_setsockopt(command, &mctl, sizeof(mctl)));
+ }
+ 
+-int do_setsockopt(int cmd, struct ip_masq_ctl *m, int mlen)
++static int do_setsockopt(int cmd, struct ip_masq_ctl *m, int mlen)
+ {
+ 	int sockfd;
+ 	int ret;
+@@ -210,13 +214,13 @@
+ }
+ 
+ 
+-void exit_error(int status, char *msg)
++static void exit_error(int status, char *msg)
+ {
+ 	fprintf(stderr, "%s: %s\n", modname, msg);
+ 	exit(status);
+ }
+ 
+-int list_forwarding(int nm)
++static int list_forwarding(int nm)
+ {
+    char buffer[256];
+    int lnum = 0;
+@@ -280,7 +284,7 @@
+ 
+ }
+ 
+-void exit_display_help(void)
++static void exit_display_help(void)
+ {
+ 	printf(
+ "Usage: %s -A -m FWMARK -r RADDR [RPORT] [-p PREF] add entry\n"
+diff -Nur --exclude *~ ipmasqadm-0.4.2/modules/portfw.c ipmasqadm-0.4.2.new/modules/portfw.c
+--- ipmasqadm-0.4.2/modules/portfw.c	Sat Dec  5 00:53:16 1998
++++ ipmasqadm-0.4.2.new/modules/portfw.c	Sat Jun 16 14:53:16 2001
+@@ -71,7 +71,11 @@
+ 
+ static const char *modname;
+ 
+-int masqmod_main(int argc, const char *argv[])
++#ifdef NO_DLOPEN
++int portfw_main(int argc, const char *argv[])
++#else
++int modmasq_main(int argc, const char *argv[])
++#endif
+ {
+ 	int c;
+ 	int command = IP_MASQ_CMD_NONE;
+@@ -208,7 +212,7 @@
+ 	return(do_setsockopt(command, &mctl, sizeof (mctl)));
+ }
+ 
+-int do_setsockopt(int cmd, struct ip_masq_ctl *m, int mlen)
++static int do_setsockopt(int cmd, struct ip_masq_ctl *m, int mlen)
+ {
+ 	static int sockfd = -1;
+ 	int ret;
+@@ -238,13 +242,13 @@
+ }
+ 
+ 
+-void exit_error(int status, char *msg)
++static void exit_error(int status, char *msg)
+ {
+ 	fprintf(stderr, "%s: %s\n", modname, msg);
+ 	exit(status);
+ }
+ 
+-int list_forwarding(int nm)
++static int list_forwarding(int nm)
+ {
+    char buffer[256];
+    int lnum = 0;
+@@ -315,7 +319,7 @@
+ 
+ }
+ 
+-void exit_display_help(void)
++static void exit_display_help(void)
+ {
+ 	printf(
+ "Usage: %s -a -P PROTO -L LADDR LPORT -R RADDR RPORT [-p PREF] add entry\n"
+diff -Nur --exclude *~ ipmasqadm-0.4.2/modules/user.c ipmasqadm-0.4.2.new/modules/user.c
+--- ipmasqadm-0.4.2/modules/user.c	Sat Aug 29 02:07:13 1998
++++ ipmasqadm-0.4.2.new/modules/user.c	Sat Jun 16 14:53:38 2001
+@@ -50,8 +50,11 @@
+ void exit_error(int status, char *msg);
+ void exit_display_help(void);
+ 
+-
++#ifdef NO_DLOPEN
++int user_main(int argc, const char *argv[])
++#else
+ int masqmod_main(int argc, const char *argv[])
++#endif
+ {
+ 	int c;
+ 	int command = IP_MASQ_CMD_NONE;
+@@ -184,14 +187,14 @@
+ 	return(do_setsockopt(command, &mctl, sizeof(mctl)));
+ }
+ 
+-void exit_error(int status, char *msg)
++static void exit_error(int status, char *msg)
+ {
+ 	fprintf(stderr, "%s: %s\n", modname, msg);
+ 	exit(status);
+ }
+ 
+ 
+-int do_setsockopt(int cmd, struct ip_masq_ctl *m, int mlen)
++static int do_setsockopt(int cmd, struct ip_masq_ctl *m, int mlen)
+ {
+ 	static int sockfd = -1;
+ 	int ret;
+@@ -218,7 +221,7 @@
+ 	return ret;
+ }
+ 
+-void exit_display_help(void)
++static void exit_display_help(void)
+ {
+ 	printf(
+ "Usage: %s -a -P PROTO -M MADDR MPORT -D DADDR DPORT -S DADDR DPORT add entry\n"
