@@ -35,7 +35,7 @@ usada caso você deseje ativar port forwarding e auto forwarding.
 
 %prep
 %setup -q
-%patch -p1
+%patch0 -p1
 %patch1 -p1
 
 %build
