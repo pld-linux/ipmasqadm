@@ -1,7 +1,7 @@
 Summary:	Ipmasqadm utility
-Summary(es):	Utilitario ipmasqadm
-Summary(pl):	Narzêdzie ipmasqadm
-Summary(pt_BR):	Utilitário ipmasqadm
+Summary(es.UTF-8):   Utilitario ipmasqadm
+Summary(pl.UTF-8):   NarzÄ™dzie ipmasqadm
+Summary(pt_BR.UTF-8):   UtilitÃ¡rio ipmasqadm
 Name:		ipmasqadm
 Version:	0.4.2
 Release:	5
@@ -20,18 +20,18 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 This tool allows ipmasq addtional setup, it is needed if you want to
 activate port forwarding or auto forwarding in 2.2 kernels.
 
-%description -l es
-Esta herramienta permite la configuración adicional de ipmasq, y puede
-usarse en caso de que se desee activar una salida de reenvío y reenvío
-automático.
+%description -l es.UTF-8
+Esta herramienta permite la configuraciÃ³n adicional de ipmasq, y puede
+usarse en caso de que se desee activar una salida de reenvÃ­o y reenvÃ­o
+automÃ¡tico.
 
-%description -l pl
-To narzêdzie pozwala na aktywowanie forwardowania portów lub
+%description -l pl.UTF-8
+To narzÄ™dzie pozwala na aktywowanie forwardowania portÃ³w lub
 automatycznego forwardowania w kernelach 2.2.
 
-%description -l pt_BR
-Essa ferramenta permite configuração adicional do ipmasq, e pode ser
-usada caso você deseje ativar port forwarding e auto forwarding.
+%description -l pt_BR.UTF-8
+Essa ferramenta permite configuraÃ§Ã£o adicional do ipmasq, e pode ser
+usada caso vocÃª deseje ativar port forwarding e auto forwarding.
 
 %prep
 %setup -q
