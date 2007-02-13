@@ -1,7 +1,7 @@
 Summary:	Ipmasqadm utility
-Summary(es.UTF-8):   Utilitario ipmasqadm
-Summary(pl.UTF-8):   Narzędzie ipmasqadm
-Summary(pt_BR.UTF-8):   Utilitário ipmasqadm
+Summary(es.UTF-8):	Utilitario ipmasqadm
+Summary(pl.UTF-8):	Narzędzie ipmasqadm
+Summary(pt_BR.UTF-8):	Utilitário ipmasqadm
 Name:		ipmasqadm
 Version:	0.4.2
 Release:	5
